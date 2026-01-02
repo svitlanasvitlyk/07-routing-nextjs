@@ -1,16 +1,21 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'next/navigation';
-import { fetchNoteById } from '@/lib/api';
+import { useParams, useRouter } from 'next/navigation';
 import css from './NotePreview.module.css';
-import NotePreviewModal from '@/components/NotePreviewModal/NotePreviewModal';
+import { useQuery } from '@tanstack/react-query';
+import { fetchNoteById } from '@/lib/api';
+import Loader from '@/components/Loader/Loader';
+import Modal from '@/components/Modal/Modal';
 
-const NotePreviewClient = () => {
-  const { id } = useParams<{ id: string }>();
+interface NotePreviewClientProps {
+  id?: string;
+}
+
+function NotePreviewClient({ id }: NotePreviewClientProps) {
+  const params = useParams<{ id: string }>();
+  const noteId = id ?? params.id;
+
   const router = useRouter();
-
   const close = () => router.back();
 
   const {
@@ -18,31 +23,30 @@ const NotePreviewClient = () => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['note', id],
-    queryFn: () => fetchNoteById(id),
+    queryKey: ['note', noteId],
+    queryFn: () => fetchNoteById(noteId),
     refetchOnMount: false,
   });
 
-  if (isLoading) return <p>Loading, please wait...</p>;
-
+  if (isLoading) return <Loader />;
   if (error || !note) return <p>Something went wrong.</p>;
 
+  const formattedDate = `Created at: ${note.createdAt}`;
+
   return (
-    <NotePreviewModal>
+    <Modal onClose={close}>
       <div className={css.container}>
         <div className={css.item}>
+          <p className={css.tag}>{note.tag}</p>
           <div className={css.header}>
             <h2>{note.title}</h2>
           </div>
           <p className={css.content}>{note.content}</p>
-          <p className={css.date}>{note.createdAt}</p>
+          <p className={css.date}>{formattedDate}</p>
         </div>
       </div>
-      <button className={css.backBtn} onClick={close}>
-        Close
-      </button>
-    </NotePreviewModal>
+    </Modal>
   );
-};
+}
 
 export default NotePreviewClient;
