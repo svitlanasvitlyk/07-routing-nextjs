@@ -1,3 +1,5 @@
+export type NoteTag = 'Todo' | 'Work' | 'Personal' | 'Meeting' | 'Shopping';
+
 export interface Note {
   title: string;
   content: string;
@@ -7,6 +9,6 @@ export interface Note {
   updatedAt: string;
 }
 
-export type NoteTag = 'Todo' | 'Work' | 'Personal' | 'Meeting' | 'Shopping';
+
 
 export type NotePost = Omit<Note, 'id' | 'createdAt' | 'updatedAt'>;
