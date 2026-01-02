@@ -1,5 +1,5 @@
 {
-  "name": "06-notehub-nextjs",
+  "name": "07-routing-nextjs",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -20,7 +20,6 @@
     "root": "github:tanstack/react-query",
     "turbopack": "^0.0.1",
     "use-debounce": "^10.0.6",
-    "yum": "^0.0.1",
     "yup": "^1.7.1"
   },
   "devDependencies": {

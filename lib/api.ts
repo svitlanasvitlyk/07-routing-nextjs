@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Note, NotePost } from '../types/note';
+import type { Note, NotePost, NoteTag } from '../types/note';
 
 export type NoteId = Note['id'];
 
@@ -8,18 +8,32 @@ export interface NotesHttpResponse {
   totalPages: number;
 }
 
+interface FetchNotesParam {
+  search: string;
+  page: number;
+  perPage: number;
+  tag?: string;
+}
+
 export const fetchNotes = async (
   query: string,
-  page: number
+  page: number,
+  tag?: string
 ): Promise<NotesHttpResponse> => {
+  const params: FetchNotesParam = {
+    search: query,
+    page: page,
+    perPage: 12,
+  };
+
+  if (tag && tag.toLowerCase() !== 'all') {
+    params.tag = tag;
+  }
+
   const response = await axios.get<NotesHttpResponse>(
     'https://notehub-public.goit.study/api/notes',
     {
-      params: {
-        search: query,
-        page: page,
-        perPage: 12,
-      },
+      params,
       headers: {
         Authorization: `Bearer ${process.env.NEXT_PUBLIC_NOTEHUB_TOKEN}`,
       },
@@ -67,4 +81,8 @@ export const deleteNote = async (id: NoteId): Promise<Note> => {
   );
 
   return response.data;
+};
+
+export const getTags = (): string[] => {
+  return ['All', 'Todo', 'Work', 'Personal', 'Meeting', 'Shopping'];
 };
