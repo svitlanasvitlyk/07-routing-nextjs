@@ -1,20 +1,24 @@
 import css from './Header.module.css';
 import Link from 'next/link';
-
+import { getTags } from '@/lib/api';
+import TagsMenu from '../TagsMenu/TagsMenu';
 
 const Header = () => {
+  const tags = getTags();
   return (
     <header className={css.header}>
-      <Link href='/' aria-label='Home'>
+      <Link className="headerLink" href="/" aria-label="Home">
         NoteHub
       </Link>
-      <nav aria-label='Main Navigation'>
+      <nav className="navigation" aria-label="Main Navigation">
         <ul className={css.navigation}>
-          <li>
-            <Link href='/'>Home</Link>
+          <li className="navigationItem">
+            <Link className="navigationLink" href="/">
+              Home
+            </Link>
           </li>
           <li>
-            <Link href='/notes'>Notes</Link>
+            <TagsMenu tags={tags} />
           </li>
         </ul>
       </nav>
@@ -23,4 +27,3 @@ const Header = () => {
 };
 
 export default Header;
-
